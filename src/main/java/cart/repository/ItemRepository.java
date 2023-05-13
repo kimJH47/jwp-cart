@@ -47,4 +47,10 @@ public class ItemRepository {
                 rs.getString("image_url")
         );
     }
+
+    public long delete(long id) {
+        String sql = "DELETE FROM ITEM_INFO where id = ?";
+        jdbcTemplate.update(sql, id);
+        return id;
+    }
 }
