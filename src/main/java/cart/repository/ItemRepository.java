@@ -1,7 +1,12 @@
 package cart.repository;
 
+import cart.domain.Item;
 import cart.dto.ItemSaveRequest;
+import cart.dto.ItemUpdateRequest;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -21,5 +26,31 @@ public class ItemRepository {
     public long save(ItemSaveRequest itemSaveRequest) {
         return simpleJdbcInsert.executeAndReturnKey(new BeanPropertySqlParameterSource(itemSaveRequest))
                 .longValue();
+    }
+
+    public long update(ItemUpdateRequest itemUpdateRequest) {
+        String sql = "UPDATE ITEM_INFO set name = ?, image_url = ?, price = ? where id = ?";
+        jdbcTemplate.update(sql, itemUpdateRequest.getName(),
+                itemUpdateRequest.getImageUrl(), itemUpdateRequest.getPrice(), itemUpdateRequest.getId());
+        return itemUpdateRequest.getId();
+    }
+
+    public List<Item> findAll() {
+        String sql = "select * from ITEM_INFO";
+        return jdbcTemplate.queryForObject(sql, itemRowMapper());
+    }
+
+    private RowMapper<List<Item>> itemRowMapper() {
+        return (rs, rowNum) -> {
+            ArrayList<Item> items = new ArrayList<>();
+            while (rs.next()) {
+                Item item = new Item(rs.getLong("id"),
+                        rs.getString("name"),
+                        rs.getInt("price"),
+                        rs.getString("image_url"));
+                items.add(item);
+            }
+            return items;
+        };
     }
 }
