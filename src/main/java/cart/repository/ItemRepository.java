@@ -3,7 +3,6 @@ package cart.repository;
 import cart.domain.Item;
 import cart.dto.ItemSaveRequest;
 import cart.dto.ItemUpdateRequest;
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -37,20 +36,15 @@ public class ItemRepository {
 
     public List<Item> findAll() {
         String sql = "select * from ITEM_INFO";
-        return jdbcTemplate.queryForObject(sql, itemRowMapper());
+        return jdbcTemplate.query(sql, itemRowMapper());
     }
 
-    private RowMapper<List<Item>> itemRowMapper() {
-        return (rs, rowNum) -> {
-            ArrayList<Item> items = new ArrayList<>();
-            while (rs.next()) {
-                Item item = new Item(rs.getLong("id"),
-                        rs.getString("name"),
-                        rs.getInt("price"),
-                        rs.getString("image_url"));
-                items.add(item);
-            }
-            return items;
-        };
+    private RowMapper<Item> itemRowMapper() {
+        return (rs, rowNum) -> new Item(
+                rs.getLong("id"),
+                rs.getString("name"),
+                rs.getInt("price"),
+                rs.getString("image_url")
+        );
     }
 }
