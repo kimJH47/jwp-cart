@@ -1,17 +1,18 @@
 package cart.repository;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import cart.domain.Item;
-import cart.dto.ItemSaveRequest;
-import cart.dto.ItemUpdateRequest;
-import java.util.List;
+import cart.dto.request.ItemSaveRequest;
+import cart.dto.request.ItemUpdateRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 class ItemRepositoryTest {
