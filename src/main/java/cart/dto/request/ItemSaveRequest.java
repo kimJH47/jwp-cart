@@ -1,8 +1,14 @@
 package cart.dto.request;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
+
 public class ItemSaveRequest {
+    @NotBlank(message = "상품의 이름은 필수입니다.")
     private final String name;
+    @NotBlank(message = "상품의 이미지는 필수 입니다.")
     private final String imageUrl;
+    @Positive(message = "상품의 가격은 0 보다 커야합니다.")
     private final int price;
 
     public ItemSaveRequest(String name, String imageUrl, int price) {

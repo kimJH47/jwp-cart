@@ -1,10 +1,18 @@
 package cart.dto.request;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+
 public class ItemUpdateRequest {
 
+    @NotNull(message = "상품의 아이디는 필수 입니다.")
     private final long id;
+    @NotBlank(message = "상품의 이름은 필수입니다.")
     private final String name;
+    @NotBlank(message = "상품의 이미지는 필수 입니다.")
     private final String imageUrl;
+    @Positive(message = "상품의 가격은 0 보다 커야합니다.")
     private final int price;
 
     public ItemUpdateRequest(long id, String name, String imageUrl, int price) {
