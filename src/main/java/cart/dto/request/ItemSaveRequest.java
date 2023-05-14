@@ -1,21 +1,14 @@
-package cart.dto;
+package cart.dto.request;
 
-public class ItemUpdateRequest {
-
-    private final long id;
+public class ItemSaveRequest {
     private final String name;
     private final String imageUrl;
     private final int price;
 
-    public ItemUpdateRequest(long id, String name, String imageUrl, int price) {
-        this.id = id;
+    public ItemSaveRequest(String name, String imageUrl, int price) {
         this.name = name;
         this.imageUrl = imageUrl;
         this.price = price;
-    }
-
-    public long getId() {
-        return id;
     }
 
     public String getName() {

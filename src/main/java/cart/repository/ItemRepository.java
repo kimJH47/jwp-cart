@@ -1,8 +1,8 @@
 package cart.repository;
 
 import cart.domain.Item;
-import cart.dto.ItemSaveRequest;
-import cart.dto.ItemUpdateRequest;
+import cart.dto.request.ItemSaveRequest;
+import cart.dto.request.ItemUpdateRequest;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
