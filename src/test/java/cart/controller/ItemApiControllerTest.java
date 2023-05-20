@@ -14,10 +14,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import cart.domain.Item;
+import cart.dto.request.ItemDeleteRequest;
 import cart.dto.request.ItemSaveRequest;
 import cart.dto.request.ItemUpdateRequest;
 import cart.repository.ItemRepository;
@@ -58,7 +60,7 @@ class ItemApiControllerTest {
 	@Test
 	@DisplayName("/api/items get 요청 시 전체 item 리스트와 응답코드 200 이 해더에 담겨서 응답 되어야한다.")
 	void findAll() throws Exception {
-	    //give
+		//give
 		ArrayList<Item> items = new ArrayList<>();
 		items.add(createItem(1, "바나나", 10000, "none"));
 		items.add(createItem(2, "사과", 20000, "nasdsa"));
@@ -92,7 +94,7 @@ class ItemApiControllerTest {
 	@Test
 	@DisplayName("/api/items patch 요청 시 업데이트 된 item id 와 응답코드 200이 해더에 담겨서 응답 되어야한다.")
 	void update() throws Exception {
-	    //given
+		//given
 		ItemUpdateRequest itemUpdateRequest = new ItemUpdateRequest(1, "바나나", "none", 20000);
 		willReturn(1L)
 			.given(itemService)
@@ -100,8 +102,8 @@ class ItemApiControllerTest {
 
 		//expect
 		mockMvc.perform(patch("/api/items")
-			.contentType(MediaType.APPLICATION_JSON)
-			.content(objectMapper.writeValueAsString(itemUpdateRequest)))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(itemUpdateRequest)))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.message").value("성공적으로 업데이트 되었습니다."))
 			.andExpect(jsonPath("$.entity").value(1L));
@@ -109,6 +111,28 @@ class ItemApiControllerTest {
 		then(itemService).should(times(1)).update(any(ItemUpdateRequest.class));
 	}
 
+	@Test
+	@DisplayName("/api/items delete 요청 시 삭제된 item id 와 응답코드 200이 해더에 담겨서 응답되어야한다.")
+	void delete() throws Exception {
+		//given
+		willReturn(1L)
+			.given(itemService)
+			.delete(anyLong());
+
+		//expect
+		ItemDeleteRequest value = new ItemDeleteRequest(1L);
+		String content = objectMapper.writeValueAsString(value);
+		System.out.println(content);
+		mockMvc.perform(MockMvcRequestBuilders.delete("/api/items")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(content))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.message").value("성공적으로 삭제 되었습니다."))
+			.andExpect(jsonPath("$.entity").value(1L));
+
+		then(itemService).should(times(1)).delete(anyLong());
+
+	}
 
 	private Item createItem(int id, String name, int price, String url) {
 		return new Item(id, name, price, url);
