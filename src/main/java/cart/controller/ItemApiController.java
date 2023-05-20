@@ -48,7 +48,7 @@ public class ItemApiController {
 	}
 
 	@DeleteMapping
-	public ResponseEntity<Response<Long>> delete(@RequestBody ItemDeleteRequest itemDeleteRequest) {
+	public ResponseEntity<Response<Long>> delete(@RequestBody @Valid ItemDeleteRequest itemDeleteRequest) {
 		return ResponseEntity.ok()
 			.body(Response.createSuccessResponse(itemService.delete(itemDeleteRequest.getId()), "성공적으로 삭제 되었습니다."));
 	}
