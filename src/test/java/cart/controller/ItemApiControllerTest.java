@@ -5,9 +5,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.util.ArrayList;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -38,7 +42,7 @@ class ItemApiControllerTest {
 	MockMvc mockMvc;
 
 	@Test
-	@DisplayName("/api/items post 요청 시  저장된 item id 와 응답코드 200 이 해더에 담겨서 응답되어야 한다.")
+	@DisplayName("/api/items post 요청 시  저장된 item id 와 응답코드 200 이 헤더에 담겨서 응답되어야 한다.")
 	void save() throws Exception {
 		//given
 		willReturn(1L)
@@ -58,7 +62,7 @@ class ItemApiControllerTest {
 	}
 
 	@Test
-	@DisplayName("/api/items get 요청 시 전체 item 리스트와 응답코드 200 이 해더에 담겨서 응답 되어야한다.")
+	@DisplayName("/api/items get 요청 시 전체 item 리스트와 응답코드 200 이 헤더에 담겨서 응답 되어야한다.")
 	void findAll() throws Exception {
 		//give
 		ArrayList<Item> items = new ArrayList<>();
@@ -92,7 +96,7 @@ class ItemApiControllerTest {
 	}
 
 	@Test
-	@DisplayName("/api/items patch 요청 시 업데이트 된 item id 와 응답코드 200이 해더에 담겨서 응답 되어야한다.")
+	@DisplayName("/api/items patch 요청 시 업데이트 된 item id 와 응답코드 200이 헤더에 담겨서 응답 되어야한다.")
 	void update() throws Exception {
 		//given
 		ItemUpdateRequest itemUpdateRequest = new ItemUpdateRequest(1, "바나나", "none", 20000);
@@ -112,7 +116,7 @@ class ItemApiControllerTest {
 	}
 
 	@Test
-	@DisplayName("/api/items delete 요청 시 삭제된 item id 와 응답코드 200이 해더에 담겨서 응답되어야한다.")
+	@DisplayName("/api/items delete 요청 시 삭제된 item id 와 응답코드 200이 헤더에 담겨서 응답되어야한다.")
 	void delete() throws Exception {
 		//given
 		willReturn(1L)
@@ -131,7 +135,31 @@ class ItemApiControllerTest {
 			.andExpect(jsonPath("$.entity").value(1L));
 
 		then(itemService).should(times(1)).delete(anyLong());
+	}
 
+	@ParameterizedTest
+	@MethodSource("invalidItemSaveRequestProvider")
+	@DisplayName("유효하지않는 데이터로 /api/items post 요청시 실패이유와 응답코드 400이 헤더에 담겨서 응답되어야한다.")
+	void save_failed(ItemSaveRequest itemSaveRequest,String expectedMassage) throws Exception {
+		//expect
+		mockMvc.perform(post("/api/items")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(itemSaveRequest)))
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
+			.andExpect(jsonPath("$.entity").value(expectedMassage));
+
+	}
+
+
+
+	public static Stream<Arguments> invalidItemSaveRequestProvider() {
+		return Stream.of(
+			Arguments.of(new ItemSaveRequest("", "none", 10000), "상품의 이름은 필수입니다."),
+			Arguments.of(new ItemSaveRequest("바나나", "", 10000), "상품의 이미지는 필수 입니다."),
+			Arguments.of(new ItemSaveRequest("포도", "asd", -10000), "상품의 가격은 0 보다 커야합니다."),
+			Arguments.of(new ItemSaveRequest("", "", -10000), "상품의 이름은 필수입니다.")
+		);
 	}
 
 	private Item createItem(int id, String name, int price, String url) {
