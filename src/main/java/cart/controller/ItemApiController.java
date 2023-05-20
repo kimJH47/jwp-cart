@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,6 +44,12 @@ public class ItemApiController {
 	public ResponseEntity<Response<Long>> update(@RequestBody @Valid ItemUpdateRequest itemUpdateRequest) {
 		return ResponseEntity.ok()
 			.body(Response.createSuccessResponse(itemService.update(itemUpdateRequest), "성공적으로 업데이트 되었습니다."));
+	}
+
+	@DeleteMapping
+	public ResponseEntity<Response<Long>> delete(@RequestBody long id) {
+		return ResponseEntity.ok()
+			.body(Response.createSuccessResponse(itemService.delete(id), "성공적으로 삭제 되었습니다."));
 	}
 
 }
