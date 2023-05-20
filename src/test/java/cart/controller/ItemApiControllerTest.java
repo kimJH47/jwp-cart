@@ -4,6 +4,8 @@ import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.util.ArrayList;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import cart.domain.Item;
 import cart.dto.request.ItemSaveRequest;
 import cart.repository.ItemRepository;
 import cart.service.ItemService;
@@ -49,6 +52,43 @@ class ItemApiControllerTest {
 			.andExpect(jsonPath("$.entity").value(1L));
 
 		then(itemService).should(times(1)).save(any(ItemSaveRequest.class));
+	}
 
+	@Test
+	@DisplayName("/api/items get 요청 시 전체 item 리스트와 응답코드 200 이 해더에 담겨서 응답 되어야한다.")
+	void findAll() throws Exception {
+	    //give
+		ArrayList<Item> items = new ArrayList<>();
+		items.add(createItem(1, "바나나", 10000, "none"));
+		items.add(createItem(2, "사과", 20000, "nasdsa"));
+		items.add(createItem(3, "포도", 25000, "podo"));
+		willReturn(items)
+			.given(itemService)
+			.findAll();
+
+		//expect
+		mockMvc.perform(get("/api/items"))
+			.andExpect(jsonPath("$.message").value("성공적으로 조회가 완료되었습니다"))
+			.andExpect(jsonPath("$.entity[0].id").value(1))
+			.andExpect(jsonPath("$.entity[0].name").value("바나나"))
+			.andExpect(jsonPath("$.entity[0].price").value(10000))
+			.andExpect(jsonPath("$.entity[0].imageUrl").value("none"))
+
+			.andExpect(jsonPath("$.entity[1].id").value(2))
+			.andExpect(jsonPath("$.entity[1].name").value("사과"))
+			.andExpect(jsonPath("$.entity[1].price").value(20000))
+			.andExpect(jsonPath("$.entity[1].imageUrl").value("nasdsa"))
+
+			.andExpect(jsonPath("$.entity[2].id").value(3))
+			.andExpect(jsonPath("$.entity[2].name").value("포도"))
+			.andExpect(jsonPath("$.entity[2].price").value(25000))
+			.andExpect(jsonPath("$.entity[2].imageUrl").value("podo"));
+
+		then(itemService).should(times(1)).findAll();
+
+	}
+
+	private Item createItem(int id, String name, int price, String url) {
+		return new Item(id, name, price, url);
 	}
 }
