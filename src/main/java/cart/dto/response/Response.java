@@ -13,6 +13,10 @@ public class Response<T> {
 		return new Response<>(entity, message);
 	}
 
+	public static Response<String> createFailedResponse(String detail, String message) {
+		return new Response<>(detail, message);
+	}
+
 	public T getEntity() {
 		return Entity;
 	}
