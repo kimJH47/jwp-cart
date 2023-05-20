@@ -12,4 +12,12 @@ public class Response<T> {
 	public static <T> Response<T> createSuccessResponse(T entity, String message) {
 		return new Response<>(entity, message);
 	}
+
+	public T getEntity() {
+		return Entity;
+	}
+
+	public String getMessage() {
+		return message;
+	}
 }
