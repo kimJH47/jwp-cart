@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import cart.domain.Item;
 import cart.dto.request.ItemSaveRequest;
+import cart.dto.request.ItemUpdateRequest;
 import cart.repository.ItemRepository;
 import cart.service.ItemService;
 
@@ -87,6 +88,27 @@ class ItemApiControllerTest {
 		then(itemService).should(times(1)).findAll();
 
 	}
+
+	@Test
+	@DisplayName("/api/items patch 요청 시 업데이트 된 item id 와 응답코드 200이 해더에 담겨서 응답 되어야한다.")
+	void update() throws Exception {
+	    //given
+		ItemUpdateRequest itemUpdateRequest = new ItemUpdateRequest(1, "바나나", "none", 20000);
+		willReturn(1L)
+			.given(itemService)
+			.update(any(ItemUpdateRequest.class));
+
+		//expect
+		mockMvc.perform(patch("/api/items")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(objectMapper.writeValueAsString(itemUpdateRequest)))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.message").value("성공적으로 업데이트 되었습니다."))
+			.andExpect(jsonPath("$.entity").value(1L));
+
+		then(itemService).should(times(1)).update(any(ItemUpdateRequest.class));
+	}
+
 
 	private Item createItem(int id, String name, int price, String url) {
 		return new Item(id, name, price, url);
