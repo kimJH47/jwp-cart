@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import cart.domain.Item;
+import cart.dto.request.ItemDeleteRequest;
 import cart.dto.request.ItemSaveRequest;
 import cart.dto.request.ItemUpdateRequest;
 import cart.dto.response.Response;
@@ -47,9 +48,9 @@ public class ItemApiController {
 	}
 
 	@DeleteMapping
-	public ResponseEntity<Response<Long>> delete(@RequestBody long id) {
+	public ResponseEntity<Response<Long>> delete(@RequestBody ItemDeleteRequest itemDeleteRequest) {
 		return ResponseEntity.ok()
-			.body(Response.createSuccessResponse(itemService.delete(id), "성공적으로 삭제 되었습니다."));
+			.body(Response.createSuccessResponse(itemService.delete(itemDeleteRequest.getId()), "성공적으로 삭제 되었습니다."));
 	}
 
 }
