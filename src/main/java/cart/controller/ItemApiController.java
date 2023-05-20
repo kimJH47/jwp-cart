@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cart.domain.Item;
 import cart.dto.request.ItemSaveRequest;
+import cart.dto.request.ItemUpdateRequest;
 import cart.dto.response.Response;
 import cart.service.ItemService;
 
@@ -35,6 +37,12 @@ public class ItemApiController {
 	public ResponseEntity<Response<List<Item>>> findAll() {
 		return ResponseEntity.ok()
 			.body(Response.createSuccessResponse(itemService.findAll(), "성공적으로 조회가 완료되었습니다"));
+	}
+
+	@PatchMapping
+	public ResponseEntity<Response<Long>> update(@RequestBody @Valid ItemUpdateRequest itemUpdateRequest) {
+		return ResponseEntity.ok()
+			.body(Response.createSuccessResponse(itemService.update(itemUpdateRequest), "성공적으로 업데이트 되었습니다."));
 	}
 
 }
