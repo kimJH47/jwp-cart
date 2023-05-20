@@ -24,7 +24,7 @@ public class ItemApiController {
 	@PostMapping
 	public ResponseEntity<Response<Long>> save(@RequestBody @Valid ItemSaveRequest itemSaveRequest) {
 		return ResponseEntity.ok()
-			.body(Response.createSuccessResponse(itemService.save(itemSaveRequest),"성공적으로 저장되었습니다."));
+			.body(Response.createSuccessResponse(itemService.save(itemSaveRequest), "성공적으로 저장되었습니다."));
 	}
 
 
