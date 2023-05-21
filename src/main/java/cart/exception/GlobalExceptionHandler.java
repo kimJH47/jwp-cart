@@ -24,4 +24,10 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.badRequest()
 			.body(Response.createFailedResponse(e.getMessage(), "알수 없는 문제가 발생 했습니다"));
 	}
+
+	@ExceptionHandler(ItemNotFoundException.class)
+	public ResponseEntity<Response<String>> handle(ItemNotFoundException e) {
+		return ResponseEntity.badRequest()
+			.body(Response.createFailedResponse(e.getMessage(), "잘못된 요청입니다"));
+	}
 }
