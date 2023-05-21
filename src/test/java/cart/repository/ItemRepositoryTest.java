@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import cart.domain.Item;
 import cart.dto.request.ItemSaveRequest;
 import cart.dto.request.ItemUpdateRequest;
+import cart.exception.ItemNotFoundException;
 
 @JdbcTest
 class ItemRepositoryTest {
@@ -74,4 +75,25 @@ class ItemRepositoryTest {
 
     }
 
+    @Test
+    @DisplayName("존재하지 않는 item id 를 update 하면 ItemNotFoundException 이 발생한다.")
+    void update_exception(){
+        //given
+        ItemUpdateRequest itemUpdateRequest = new ItemUpdateRequest(1, "사과", "no", 5000);
+        //expect
+        assertThatThrownBy(() -> itemRepository.update(itemUpdateRequest))
+            .isInstanceOf(ItemNotFoundException.class)
+            .hasMessage("상품의 ID 가 존재하지 않습니다.");
+
+
+    }
+
+    @Test
+    @DisplayName("존재하지않는 item id 를 delete 하면 ItemNotFoundException 이 발생한다.")
+    void delete_exception(){
+        //expect
+        assertThatThrownBy(() -> itemRepository.delete(1))
+            .isInstanceOf(ItemNotFoundException.class)
+            .hasMessage("상품의 ID 가 존재하지 않습니다.");
+    }
 }
