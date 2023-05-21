@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import cart.domain.Item;
 import cart.dto.request.ItemSaveRequest;
 import cart.dto.request.ItemUpdateRequest;
+import cart.exception.ItemNotFoundException;
 
 @Repository
 public class ItemRepository {
@@ -30,6 +31,7 @@ public class ItemRepository {
 	}
 
 	public long update(ItemUpdateRequest itemUpdateRequest) {
+		validExistId(itemUpdateRequest.getId());
 		String sql = "UPDATE ITEM_INFO set name = ?, image_url = ?, price = ? where id = ?";
 		jdbcTemplate.update(sql, itemUpdateRequest.getName(),
 			itemUpdateRequest.getImageUrl(), itemUpdateRequest.getPrice(), itemUpdateRequest.getId());
@@ -51,8 +53,18 @@ public class ItemRepository {
 	}
 
 	public long delete(long id) {
+		validExistId(id);
 		String sql = "DELETE FROM ITEM_INFO where id = ?";
 		jdbcTemplate.update(sql, id);
 		return id;
 	}
+
+	private void validExistId(long id) {
+		String sql = "SELECT COUNT(ID) as count FROM ITEM_INFO WHERE id = ? limit 1";
+		Integer count = jdbcTemplate.queryForObject(sql, Integer.class, id);
+		if (count == null || count != 1) {
+			throw new ItemNotFoundException("상품의 ID 가 존재하지 않습니다.");
+		}
+	}
+
 }
