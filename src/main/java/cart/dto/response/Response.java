@@ -1,11 +1,11 @@
 package cart.dto.response;
 
 public class Response<T> {
-	private final T Entity;
+	private final T entity;
 	private final String message;
 
 	public Response(T entity, String message) {
-		Entity = entity;
+		this.entity = entity;
 		this.message = message;
 	}
 
@@ -13,12 +13,12 @@ public class Response<T> {
 		return new Response<>(entity, message);
 	}
 
-	public static Response<String> createFailedResponse(String detail, String message) {
+	public static <T> Response<T> createFailedResponse(T detail, String message) {
 		return new Response<>(detail, message);
 	}
 
 	public T getEntity() {
-		return Entity;
+		return entity;
 	}
 
 	public String getMessage() {
