@@ -164,23 +164,23 @@ class ItemApiControllerTest {
 	@ParameterizedTest
 	@MethodSource("invalidItemUpdateRequestProvider")
 	@DisplayName("유효하지않는 데이터로 /api/items patch 요청시 실패이유와 응답코드 400이 헤더에 담겨서 응답되어야한다")
-	void update_failed(ItemUpdateRequest itemUpdateRequest, String expectedMassage) throws Exception {
+	void update_failed(ItemUpdateRequest itemUpdateRequest, String reasonField, String expectedMassage) throws Exception {
 		//expect
 		mockMvc.perform(post("/api/items")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(itemUpdateRequest)))
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
-			.andExpect(jsonPath("$.entity").value(expectedMassage));
+			.andExpect(jsonPath("$.entity." + reasonField).value(expectedMassage));
 	}
 
 	public static Stream<Arguments> invalidItemUpdateRequestProvider() {
 
 		return Stream.of(
-			Arguments.of(new ItemUpdateRequest(1,"", "none", 10000), "상품의 이름은 필수입니다."),
-			Arguments.of(new ItemUpdateRequest(1,"바나나", "", 10000), "상품의 이미지는 필수 입니다."),
-			Arguments.of(new ItemUpdateRequest(1,"포도", "asd", -10000), "상품의 가격은 0 보다 커야합니다."),
-			Arguments.of(new ItemUpdateRequest(1,"", "", -10000), "상품의 이름은 필수입니다.")
+			Arguments.of(new ItemUpdateRequest(1,"", "none", 10000),"name","상품의 이름은 필수입니다."),
+			Arguments.of(new ItemUpdateRequest(1,"바나나", "", 10000), "imageUrl","상품의 이미지는 필수 입니다."),
+			Arguments.of(new ItemUpdateRequest(1,"포도", "asd", -10000),"price","상품의 가격은 0 보다 커야합니다."),
+			Arguments.of(new ItemUpdateRequest(1,"", "", -10000),"name","상품의 이름은 필수입니다.")
 		);
 	}
 
