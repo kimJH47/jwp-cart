@@ -23,10 +23,10 @@ public class UserRepository {
 	}
 
 	public List<UserSearchDto> findAll() {
-		return jdbcTemplate.query("SELECT user_id, password FROM USER_INFO", getObject());
+		return jdbcTemplate.query("SELECT user_id, password FROM USER_INFO", userRowMapper());
 	}
 
-	private RowMapper<UserSearchDto> getObject() {
-		return (rs, rowNum) -> new UserSearchDto(rs.getString("id"), rs.getString("password"));
+	private RowMapper<UserSearchDto> userRowMapper() {
+		return (rs, rowNum) -> new UserSearchDto(rs.getString("user_id"), rs.getString("password"));
 	}
 }
