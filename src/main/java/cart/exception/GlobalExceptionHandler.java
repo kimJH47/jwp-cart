@@ -14,12 +14,12 @@ import cart.dto.response.Response;
 public class GlobalExceptionHandler {
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<Response<HashMap<String,String>>> handle(MethodArgumentNotValidException e) {
+	public ResponseEntity<Response<HashMap<String, String>>> handle(MethodArgumentNotValidException e) {
 		FieldError fieldError = e.getFieldError();
 		assert fieldError != null;
 		HashMap<String, String> hashMap = new HashMap<>();
 		for (FieldError error : e.getFieldErrors()) {
-			hashMap.put(error.getField(),error.getDefaultMessage());
+			hashMap.put(error.getField(), error.getDefaultMessage());
 		}
 		return ResponseEntity.badRequest()
 			.body(Response.createFailedResponse(hashMap, "잘못된 요청입니다."));
@@ -36,4 +36,11 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.badRequest()
 			.body(Response.createFailedResponse(e.getMessage(), "잘못된 요청입니다"));
 	}
+
+	@ExceptionHandler(UnAuthenticationException.class)
+	public ResponseEntity<Response<String>> handle(UnAuthenticationException e) {
+		return ResponseEntity.status(401)
+			.body(Response.createFailedResponse(e.getMessage(), "잘못된 요청입니다"));
+	}
+
 }
