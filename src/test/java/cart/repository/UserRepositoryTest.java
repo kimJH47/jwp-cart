@@ -35,7 +35,7 @@ class UserRepositoryTest {
 
 		//then
 		assertThat(expect).hasSize(3);
-		assertThat(expect.get(2).getId()).isEqualTo("id3");
+		assertThat(expect.get(2).getEmail()).isEqualTo("id3");
 		assertThat(expect.get(2).getPassword()).isEqualTo("password3");
 	}
 }
