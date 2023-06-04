@@ -1,16 +1,20 @@
 package cart.service;
 
-import java.util.List;
-
 import org.springframework.stereotype.Service;
 
 import cart.dto.response.CartSearchDto;
+import cart.repository.CartRepository;
 
 @Service
 public class CartService {
 
+	private final CartRepository cartRepository;
 
-	public List<CartSearchDto> findByUserId(String userId) {
-		return null;
+	public CartService(CartRepository cartRepository) {
+		this.cartRepository = cartRepository;
+	}
+
+	public CartSearchDto findByUserEmail(String userId) {
+		return cartRepository.findByUserEmail(userId);
 	}
 }
