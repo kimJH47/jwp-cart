@@ -7,19 +7,22 @@ import javax.validation.constraints.Positive;
 public class ItemUpdateRequest {
 
     @NotNull(message = "상품의 아이디는 필수 입니다.")
-    private final long id;
+    private long id;
     @NotBlank(message = "상품의 이름은 필수입니다.")
-    private final String name;
+    private String name;
     @NotBlank(message = "상품의 이미지는 필수 입니다.")
-    private final String imageUrl;
+    private String imageUrl;
     @Positive(message = "상품의 가격은 0 보다 커야합니다.")
-    private final int price;
+    private int price;
 
     public ItemUpdateRequest(long id, String name, String imageUrl, int price) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
         this.price = price;
+    }
+
+    public ItemUpdateRequest() {
     }
 
     public long getId() {

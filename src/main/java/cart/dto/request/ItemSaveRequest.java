@@ -5,11 +5,14 @@ import javax.validation.constraints.Positive;
 
 public class ItemSaveRequest {
 	@NotBlank(message = "상품의 이름은 필수입니다.")
-	private final String name;
+	private String name;
 	@NotBlank(message = "상품의 이미지는 필수 입니다.")
-	private final String imageUrl;
+	private String imageUrl;
 	@Positive(message = "상품의 가격은 0 보다 커야합니다.")
-	private final int price;
+	private int price;
+
+	public ItemSaveRequest() {
+	}
 
 	public ItemSaveRequest(String name, String imageUrl, int price) {
 		this.name = name;

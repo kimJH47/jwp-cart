@@ -10,6 +10,9 @@ public class ItemDeleteRequest {
 		this.id = id;
 	}
 
+	public ItemDeleteRequest() {
+	}
+
 	public long getId() {
 		return id;
 	}
