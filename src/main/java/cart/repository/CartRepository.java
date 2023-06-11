@@ -1,6 +1,7 @@
 package cart.repository;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -40,5 +41,13 @@ public class CartRepository {
 			}
 			return new CartSearchDto(items.size(), items);
 		};
+	}
+
+	public void addItem(String userEmail, String name, String imageUrl, int price) {
+		simpleJdbcInsert.execute(Map.of(
+			"user_email", userEmail,
+			"price", price,
+			"name", name,
+			"image_url", imageUrl));
 	}
 }
