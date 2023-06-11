@@ -75,7 +75,6 @@ class CartControllerTest {
 			.andExpect(jsonPath("$.entity.items[2].id").value(3))
 			.andExpect(jsonPath("$.entity.items[2].name").value("오렌지"))
 			.andExpect(jsonPath("$.entity.items[2].price").value(3000))
-			.andExpect(jsonPath("$.entity.items[2].imageUrl").value("none"))
-		;
+			.andExpect(jsonPath("$.entity.items[2].imageUrl").value("none"));
 	}
 }
